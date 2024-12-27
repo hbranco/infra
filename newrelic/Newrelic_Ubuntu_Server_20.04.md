@@ -115,17 +115,64 @@ MYSQL_PASS: 'newrelic_password'
 ```
 
 ---
+## **4.4** Instalar o Integrador do PostgreSQL**
 
+### Baixar o pacote do integrador
 
+bash
 
+Copiar código
 
+```bash
+sudo apt install nri-postgresql -y
+```
 
+### Configurar o integrador
 
+Edite o arquivo de configuração do PostgreSQL:
 
+bash
 
+Copiar código
 
+```bash
+sudo nano /etc/newrelic-infra/integrations.d/postgresql-config.yml
+```
 
+```yaml
+integrations:
+	- name: nri-postgresql
+	config: 
+		hostname:localhost
+		port: 5432 
+		username: newrelic 
+		password: <YOUR_DB_PASSWORD> 
+		database: postgres
+```
 
+Substitua `<YOUR_DB_PASSWORD>` pela senha do usuário `newrelic`.
+
+### Criar um usuário para monitoramento no PostgreSQL
+
+Acesse o banco de dados como `postgres`:
+
+```bash 
+sudo -u postgres psql
+```
+
+Crie o usuário e atribua permissões:
+
+Copiar código
+
+```sql
+CREATE ROLE newrelic WITH LOGIN PASSWORD '<YOUR_DB_PASSWORD>';
+GRANT CONNECT ON DATABASE postgres TO newrelic; 
+GRANT USAGE ON SCHEMA public TO newrelic; 
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO newrelic; 
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO newrelic;
+```
+
+---
 
 ## **5. Reinicie o agente**
 
