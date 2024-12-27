@@ -90,6 +90,8 @@ integrations:
       role: mysql-server
 ```
 
+
+
 - Substitua `sua_senha_mysql` pela senha do usuário **root** do MySQL.
 - Caso seu MySQL use outro usuário com permissão de leitura, ajuste os valores de `MYSQL_USER` e `MYSQL_PASS`.
 
@@ -114,6 +116,17 @@ MYSQL_PASS: 'newrelic_password'
 
 ---
 
+
+
+
+
+
+
+
+
+
+
+
 ## **5. Reinicie o agente**
 
 Após as configurações, reinicie o agente do New Relic Infrastructure:
@@ -121,7 +134,6 @@ Após as configurações, reinicie o agente do New Relic Infrastructure:
 ```bash
 sudo systemctl restart newrelic-infra
 ```
-
 ---
 
 ## **6. Verifique a instalação**
@@ -143,3 +155,26 @@ Se precisar verificar os logs, altera o log_level no arquivo de configuração p
 ```bash
 sudo tail -f /var/log/newrelic-infra/newrelic-infra.log
 ```
+---
+
+### 6.2 Verificar a Integração do PostgreSQL
+   Testar diretamente o integrador do PostgreSQL
+   Execute o binário do integrador manualmente para verificar se ele está conseguindo coletar os dados:
+```bash
+sudo /var/db/newrelic-infra/newrelic-integrations/bin/nri-postgresql --config_path /etc/newrelic-infra/integrations.d/postgresql-config.yml
+```
+**Resultados esperados:**
+
+Se a integração estiver configurada corretamente, você verá uma saída JSON contendo métricas coletadas, como conexões ativas, consultas por segundo, etc.
+Se houver erros, eles serão exibidos. Verifique as permissões no PostgreSQL, a senha do usuário e a configuração de rede.
+
+### 6.3 Verificar a Integração do MySQL
+   Testar diretamente o integrador do MySQL
+   Execute o binário do integrador manualmente:
+
+```bash
+sudo /var/db/newrelic-infra/newrelic-integrations/bin/nri-mysql --config_path /etc/newrelic-infra/integrations.d/mysql-config.yml
+```
+**Resultados esperados:**
+Uma saída JSON será exibida com métricas como o número de conexões ativas, o tempo de execução de consultas, etc.
+Se houver erros, verifique o arquivo de configuração, a conectividade com o banco de dados e as permissões do usuário.
